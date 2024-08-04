@@ -1,0 +1,265 @@
+html,
+body * {
+  padding: 0;
+  margin: 0;
+font-family: 'Almarai', sans-serif;
+box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bs {
+  box-sizing: border-box;
+}
+.pointer{
+  cursor: pointer;
+}
+.bttn{
+  font-size: small;
+  color: white;
+}
+.rtl{
+  direction: rtl;
+}
+.fs8{
+  font-size: small;
+  
+}
+.fs9{
+font-size: 11pt;}
+.bg-wight{
+  background-color: white;
+}
+.vh{
+  height: 100vh;
+}
+.scrol{
+  overflow-y: scroll;
+}
+/* --------------------------------------- item tak---------------------------------------- */
+.task{
+  padding: 1px;
+}
+.task-shadow{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  height: 380px;
+  box-sizing: border-box;
+  margin: 0px;
+}
+  /* title-task */
+.task-title{
+  height: 40px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+.bg0{
+  background-color: #BE3A45;
+}
+.bg1{
+  background-color: #F15D4F;
+}
+.bg2{
+  background-color: #153543;
+}
+.bg3{
+  background-color: #78B5B5;
+}
+.bg4{
+  background-color: #6A2B56;
+}
+.bg5{
+  background-color: #FBBD96;
+}
+.bg6{
+  background-color: #f0efee;
+}
+/* name-task */
+.task-name{
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  height:50px;
+}
+.task-name1{
+  height: 50px;
+  font-size: small;
+}
+/*  body-task */
+.task-body{
+  height: 200px;
+}
+.task-body1{
+background-color:#e2f8f8 ;
+height: 100%;
+margin: 0px;
+box-sizing: border-box;
+overflow-y: scroll;
+}
+.note-task{
+  padding: 5px;
+  background-color:#f1fcfc ;
+  font-size: small;
+  box-sizing: border-box;
+  height: fit-content;
+
+}
+/* task- fotter */
+.task-fotter{
+  background-color: #FBBD96;
+  height: 40px;
+  margin: 0px;
+  box-sizing: border-box;
+  }
+  .text-fotter-p{
+    font-size: smaller;
+  }
+  
+  /* --------------------------------------------Nav Slide ---------------------------------------- */
+  .nav-slide{
+    height: 100vh;
+    position: fixed;
+    width: 40%;
+    top: 0%;
+    
+    background-color: #fcf8f6;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .active0{
+    left: -40%;
+    transition: all .3s ease-in-out;
+  }
+  .active1{
+    left: 1px;
+    transition: all .3s ease-in-out;
+  }
+
+
+
+  /* --------------------------------------------New Form---------------------------------------- */
+.new-form{
+background-color: #fcf8f6;
+width: 100%;
+height: max-content;
+}
+.newform-1{
+  width: 95%;
+  border-radius: 10px;
+  background-color: white;
+}
+.newform-input{
+  border: 1px #919090 dashed;
+  border-radius: 10px;
+  background-color: rgb(249, 249, 249);
+}
+.bg-newform{
+  background-color: #FBBD96;
+  color: #6A2B56 ;
+
+}
+.note-newform{
+  background-color: white;
+  font-size: smaller;
+}
+  /* --------------------------------------------Edit Form---------------------------------------- */
+ .editform{
+  height: 100;
+ }
+.time-linee{
+  position: absolute;
+  width: 5px;
+  margin: 0%;
+  padding: 0%;
+  height: 100%;
+  right: 37px;
+  background-color: #dadcdc;
+}
+.z-ind{
+  z-index: 100;
+}
+.high{
+  height: max-content;
+  position: relative;
+
+}
+.visform{
+  transform: scaleY(1); 
+  transform-origin: 50% 0%;
+  visibility: visible;
+  transition: all .3s ease-in-out;
+}
+.unvisform{
+transform: scaleY(0); 
+visibility: hidden;
+  transition: all .3s ease-in-out;
+}
+  /* --------------------------------------------Cards---------------------------------------- */
+.cards{
+ width:95%;
+
+}
+.border-card{
+  border-bottom: 5pt rgb(161, 159, 159) solid;
+}
+.bg-cards{
+  background-color: #f8f7f7;
+}
+/* ------------------------------------------------login------------------------------------------------ */
+.bg-login{
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/arch-86ad1.appspot.com/o/657874586.jpg?alt=media&token=00694b94-7e48-4b4e-b73b-ef44e540a4b9);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  position: relative; 
+}
+.trans{
+  background-color: #6a2b56bf;
+  position: absolute;
+  right: 0%;
+  
+  
+}
+.mid{
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  transform: translateY(-50%);
+}
+.form-login{
+  position: absolute;
+  right: 0%;
+  top: 20%; 
+  width:100% ;
+  
+}
+/* ------------------------------------------------admin------------------------------------------------ */
+.admin-bt{
+  color: #153543;
+  text-align: center;
+  height: max-content;
+  
+}
+.container-admin{
+  height: 100vh;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+/* ------------------------------------------------contractor------------------------------------------------ */
+.contractor{
+height: 100vh;
+}
+.add-admin{
+  font-weight:700;
+  float: right;
+}
+.vhc{
+  height: 90vh;
+}
+.fs-form{
+  font-size: small;
+}
