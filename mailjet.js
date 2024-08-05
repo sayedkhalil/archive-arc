@@ -4,6 +4,8 @@ const mailjetClient  = Mailjet
 	.apiConnect("c3417fc444109477b7aae51bad8e0945","b1b4d0b99a11f0c629ffd94b41ef64d5")
       
 export  const sendEmail=async({ to, from, subject, message }) =>{
+const header = new Headers()
+header.append( 'Access-Control-Allow-Origin',"https://api.mailjet.com/v3.1/send")
     const emailData = {
       Messages: [
         {
