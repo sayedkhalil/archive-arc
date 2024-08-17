@@ -65,6 +65,11 @@ export default function Home({getdata }) {
       settasks([...tasks, filter(x=>!x.archivet&&x.aprove=='aprove-a'||x.aprove =='aprove-b'||x.aprove=='aprove-d')])
 
     }
+    if (CurrentUser.ref =="constarctor"){
+     
+      settasks([...tasks, filter(x=>!x.archivec&&x.aprove=='aprove-a'||x.aprove =='aprove-b'||x.aprove=='aprove-d')])
+
+    }
 
   },[])
 
