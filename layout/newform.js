@@ -8,11 +8,14 @@ import { useRouter } from "next/router";
 import { db, storage } from "../firebase";
 import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc , setDoc,getDoc} from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { sendEmail } from "../mailjet";
+import toast, { Toaster } from 'react-hot-toast';
+
+import { ded } from "../mailjet";
 
 const NewForm = (props) => {
   const [active ,setactive]=useState(0)
   const[task,settask]=useState({})
+  const[loading,setloading]=useState("0")
   const[requisites,setrequisites]=useState(props.requisites.filter(x=>x.send ==props.user.ref))
   const[note,setnote]=useState({})
   const[mention,setmention]=useState(()=>{ if (props.user.ref =="constarctor") { return(
@@ -20,8 +23,7 @@ const NewForm = (props) => {
    }else{return('')}})
   const[progress,setprogress]=useState(0)
   const[code,setcode]=useState(0)
-  const v=0
- 
+ const v = 0
   // --------------------------------------------------------------------- chose requisite-----------------------------------
   const onreq =async(e)=>{
   const   req = requisites.find(x=>x.id == e.target.value);   
@@ -32,7 +34,7 @@ const NewForm = (props) => {
     const arshive =   await arshivesnapshot.docs?arshivesnapshot.docs.map(doc =>(doc.data())):[] ;
       
         settask({...task,code:`${props.project.id}-${req.id}-${arshive.length}`,path: `arshive\/${props.project.id}\/${req.path}`,action:"0",
-          init:props.user.name,date:new Date(),project:props.project.name,projectId:props.project.id,version:`v0${v}`,tags:[props.user.id],mention:mention})
+          init:props.user.name,date:new Date().toDateString(),project:props.project.name,projectId:props.project.id,version:`v0${v}`,tags:[props.user.id],mention:mention})
         setactive(0)
   }
   else{
@@ -44,23 +46,24 @@ const NewForm = (props) => {
 
   const onkind =async(e)=>{
     const   req = requisites.find(x=>x.id == code);   
-    const arshivelist = collection(db, `arshive\/${props.project.id}\/${req.path}${e.target.value}\/${code}`);
+    const arshivelist = collection(db, `arshive\/${task.site?`${props.project.id}\/${task.site.code}`:props.project.id}\/${req.path}${e.target.value}\/${code}`);
     const arshivesnapshot = await getDocs(arshivelist);
     const arshive =   await arshivesnapshot.docs?arshivesnapshot.docs.map(doc =>(doc.data())):[] ;
       
-     settask({...task,code:`${props.project.id}-${req.id}-${arshive.length}`,path: `arshive\/${props.project.id}\/${req.path}${e.target.value}\/${code}`,action:"0",
-          init:props.user.name,date:new Date(),project:props.project.name,projectId:props.project.id,version:`v0${v}`,tags:[props.user.id],mention:mention})
+     settask({...task,code:`${task.site?`${props.project.id}-${task.site.code}`:props.project.id}-${req.id}-${e.target.value}-${arshive.length}`,path: `arshive\/${task.site?`${props.project.id}\/${task.site.code}`:props.project.id}\/${req.path}${e.target.value}\/${code}`,action:"0",
+          init:props.user.name,date:new Date().toDateString(),project:props.project.name,projectId:props.project.id,version:`v0${v}`,tags:[props.user.id],mention:mention})
   }
   // --------------------------------------------------------------------- chose comment-----------------------------------
 
 const onnots =(e)=>{    
-setnote({...note,name:props.user.name,note:e.target.value,date:new Date()})  
+setnote({...note,name:props.user.name,note:e.target.value,date:new Date().toDateString()})  
 settask({...task,notes:[note]})
 }
   // --------------------------------------------------------------------- chose title-----------------------------------
   const ontitle =(e)=>{    
   settask({...task,title:e.target.value})  
   }
+  const onsite =()=>settask({...task,site:e.target.value})
   // --------------------------------------------------------------------- file-----------------------------------
   const onfile  = (e) =>
     {    
@@ -85,30 +88,67 @@ settask({...task,notes:[note]})
                     }
                   );
                   };}
+
+                   
   // ---------------------------------------------------------------------send-----------------------------------
 
-      const onsend=async(e)=>{
-        e.preventDefault()
-        console.log(task)
-        const docRef = await setDoc(doc(db, "requisite", task.code),task);
-        const email =props.users.find(x=>x.id==task.mention)
-        try {
-          await sendEmail({
-            to: 'sayedkhalil992@gmail.com',
-            from: "syednoman@saudiarc.com",
-            subject: 'Hello from Next.js',
-            message: 'This is a test email sent from Next.js using Mailjet.',
-          });
-          console.log('Email sent successfully!');
-        } catch (error) {
-          console.error('Error sending email:', error);
-          // Handle error
+  const onsend=async(e)=>{
+    e.preventDefault()
+    setloading("1")
+    const docRef = await setDoc(doc(db, "requisite", task.code),task);
+    const email =props.users.find(x=>x.id==task.mention)
+    const rres ={note:note,emailTo:email.email,name:email.name,title:task.title,code:task.code,email:props.user.email}
+    try {
+      // Send a POST request to the API route with the todo item
+      const response = await fetch('/api/rout', {
+        method: 'POST',
+        body:JSON.stringify(rres),
+        headers: {
+          'Content-Type': 'application/json',
         }
-      }
-                  
+        
+      });if (response.ok) {
+        setloading("0")
+        props.setnewTasks([...props.newTasks,task])
+        toast('تم الارسال بنجاح',{
+          duration: 5000,
+          position: 'top-center',     
+         
+          icon: '👏',
+        
+          iconTheme: {
+            primary: '#000',
+            secondary: '#fff',
+          },
+      
+        });
+        props.setactive("active0")
+        setnote({note:""})
+        settask({title:""})
+
+            } else {
+              setloading("0")
+              toast('لم يتم الارسال',{
+                duration: 5000,
+                position: 'top-center',     
+               
+                icon: '❌',
+              
+                iconTheme: {
+                  primary: '#000',
+                  secondary: '#fff',
+                },
+            
+              });   }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   // ---------------------------------------------------------------------canseled-----------------------------------
 const onnoactive=()=>{
   props.setactive("active0")
+  setnote({note:""})
+  settask({title:""})
 }    
 
     // ----------------------------------------------------------
@@ -130,11 +170,28 @@ crossOrigin="anonymous">
       <p className="col-11 text-center  ">طلب جديد</p>
       <i className="fas col-1 text-dark fa-arrow-circle-left fa-lg pointer" onClick={onnoactive}></i>
   </div>
+  <Toaster />
 <div className="newform-1 bs mx-auto mt-4 p-5">
   <form onSubmit={onsend}>
       <div className={`col-12 text-dark text-center   `}>
              تفاصيل الطلب  
       </div>
+{
+    props.project.kinde=="multi"?
+    <div className="form-group text-dark mt-3">
+  <label htmlFor="exampleFormControlSelect1 "className="text-info m-1">اختار الموقع</label>
+  <select className="form-control" id="exampleFormControlSelect1"  onChange={onsite}>
+  <option selected disabled className="text-secondary mt-1 fs9">اختر الموقع</option>
+  {
+    props.project.sites.map(x=>
+      <option value={x} className="text-secondary mt-1  fs9">{x.name}</option>
+    )
+  }
+  <option value="ge" className="text-secondary mt-1  fs9">عام</option>
+  </select>
+  </div>:""
+
+}
     <div className="form-group text-dark fs9 mt-3">
     <label htmlFor="exampleFormControlSelect1 "className="text-info m-1">اختار الطلب</label>
     <select className="form-control" id="exampleFormControlSelect1" onChange={onreq} required>
@@ -166,6 +223,9 @@ active==1?
 
   :""
 }
+{
+
+}
   <div className="form-group  text-info">
        <label  htmlFor="formGroupExampleInput">منطوق الطلب</label>
        <input type="text" className="mt-1 fs-form form-control" id="formGroupExampleInput" placeholder="منطوق الطلب" required value={task.title}  onChange={ontitle}/>
@@ -191,7 +251,13 @@ active==1?
     </div>
    </div>
     <div className="rtl mt-2 p-3">
-    <input className=" btn px-3 mx-3 bttn btn-sm btn-info"  type="submit" value="إرسال" />
+      {loading=="0"? <input className=" btn px-3 mx-3 bttn btn-sm btn-info"  type="submit" value="إرسال" />:
+         <button className=" btn px-3 mx-3 bttn btn-sm btn-info" >
+         <div class="spinner-border h-100 text-light" role="status">
+         <span class="sr-only">Loading...</span>
+         </div>
+         </button>
+      }   
    <button type="button" className="btn bttn btn-secondary px-3 btn-sm" onClick={onnoactive}>إلغاء</button>
    </div>
 </form>

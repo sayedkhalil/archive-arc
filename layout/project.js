@@ -17,6 +17,7 @@ const Project = (props) => {
   const [project,setproject]=useState(projects[0]?projects[0]:init)
   const [projectitem,setprojectitem]=useState({})
   const [contractors,setcontractors]=useState(props.contracors)
+  const [kind,setkind]=useState("single")
   const[progress,setprogress]=useState(0)
   const[progress1,setprogress1]=useState(0)
   const[progress2,setprogress2]=useState(0)
@@ -25,7 +26,18 @@ const Project = (props) => {
   const[progress5,setprogress5]=useState(0)
   const[progress6,setprogress6]=useState(0)
   const[active,setactive]=useState(0)
-  const onname = (e) =>   {setprojectitem({...projectitem,name:e.target.value,});setproject({...project,name:e.target.value})}
+  const[activee,setactivee]=useState(0)
+  const[sites,setsites]=useState(props.data.kinde=="multi"?project.sites:[])
+  const[site,setsite]=useState({})
+  const addsite=(e)=>{setsites([...sites,site])}
+ const onnamesite=(e)=>{setsite({...site,name:e.target.value})}
+ const oncodesite=(e)=>{setsite({...site,code:e.target.value})}
+ const onlocationsite=(e)=>{setsite({...site,location:e.target.value})}
+ const onstartdatesite=(e)=>{setsite({...site,startdate:e.target.value})}
+ const onenddatesite=(e)=>{setsite({...site,dateend:e.target.value})}
+ const onperiotsite=(e)=>{setsite({...site,periot:e.target.value})}
+ const oncostsite=(e)=>{setsite({...site,cost:e.target.value})}
+ const onname = (e) =>   {setprojectitem({...projectitem,name:e.target.value,kinde:kind});setproject({...project,name:e.target.value})}
 const onid = (e) =>     {setprojectitem({...projectitem,id:e.target.value});setproject({...project,id:e.target.value})}
 const onscope = (e) =>     {setprojectitem({...projectitem,scope:e.target.value});setproject({...project,scope:e.target.value})}
 const onregion = (e) => {setprojectitem({...projectitem,region:e.target.value});setproject({...project,region:e.target.value})}
@@ -43,6 +55,7 @@ const onstartdate = (e) => { setprojectitem({...projectitem,startdate:e.target.v
 const onenddate = (e) => { setprojectitem({...projectitem,Denddate:e.target.value});setproject({...project,enddate:e.target.value})}
 const onperiot = (e) => { setprojectitem({...projectitem,periot:e.target.value});setproject({...project,periot:e.target.value})}
 const onconstractor = (e) => { setprojectitem({...projectitem,contractor:e.target.value});setproject({...project,contractor:e.target.value})}
+const onkinde =(e)=>setkind(e.target.value)
 const oncover  = (e) =>
                         {    
                             const fileopn = e.target.files[0];
@@ -215,9 +228,8 @@ const onfile2  = (e) =>
   const add = async(e)=>{
     e.preventDefault()
     setprojectitem({...projectitem})
-    console.log(projectitem)
    if(active==1){setprojects([...projects,projectitem]) }
-  const docRef = await setDoc(doc(db, "projects", projectitem.id),projectitem);
+  const docRef = await setDoc(doc(db, "projects", projectitem.id),{...projectitem,sites:sites});
   setprojectitem(init)
   }
 // ---------------------------------------------------------------add & edie function --------------------------------------------------------------------
@@ -525,6 +537,44 @@ const form =()=>{
            <label htmlFor="formGroupExampleInput">قيمة المشروع</label>
            <input type="text" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder="قيمة المشروع"   onChange={oncost}/>
          </div>
+       { project.kinde=="malti"?  <div className="form-group mt-2  text-info">
+      <button className="btn btn-info px5 text-light" onClick={()=>setactivee("1")}  >إضافة موقع + </button>
+     </div>:""}
+     {
+      activee=="1"?
+      <div className="form-group mt-2  ">
+      <div className="form-group  text-info">
+        <label  htmlFor="formGroupExampleInput"> اسم الموقع</label>
+        <input type="text" className="mt-1 fs-form form-control" id="formGroupExampleInput" placeholder="اسم الموقع"  onChange={onnamesite}/>
+      </div>
+      <div className="form-group text-info mt-1">
+        <label htmlFor="formGroupExampleInput">code</label>
+        <input type="text" className="mt-1 fs-form  form-control" id="formGroupExampleInput" placeholder="code"  onChange={oncodesite}/>
+      </div>
+      <div className="form-group text-info mt-1">
+        <label htmlFor="formGroupExampleInput">الموقع</label>
+        <input type="text" className="mt-1 fs-form  form-control" id="formGroupExampleInput" placeholder="الموقع"  onChange={onlocationsite}/>
+      </div>
+      <div className="form-group text-info mt-1">
+           <label htmlFor="formGroupExampleInput">تاريخ البداية</label>
+           <input type="date" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder="تاريخ البداية"   onChange={onstartdatesite}/>
+         </div>
+         <div className="form-group text-info mt-1">
+           <label htmlFor="formGroupExampleInput">تاريخ النهاية</label>
+           <input type="date" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder="تاريخ النهاية"   onChange={onenddatesite}/>
+         </div>
+         <div className="form-group text-info mt-1">
+           <label htmlFor="formGroupExampleInput">مدة المشروع</label>
+           <input type="text" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder="مدة المشروع"   onChange={onperiotsite}/>
+         </div>
+         <div className="form-group text-info mt-1">
+           <label htmlFor="formGroupExampleInput">قيمة المشروع</label>
+           <input type="text" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder="قيمة المشروع"   onChange={oncostsite}/>
+         </div>
+        <button type="button" className="btn bttn btn-secondary px-3 btn-sm"onClick={addsite}> اضافة الموقع</button>
+      </div>:""
+     
+     }
          <div className="form-group text-info mt-1">
            <label htmlFor="formGroupExampleInput">رابط الملفات</label>
            <input type="text" className="mt-1 form-control fs-form" id="formGroupExampleInput" placeholder=""  onChange={onarchive}/>
@@ -630,14 +680,12 @@ return (
         crossOrigin="anonymous">
         </script>
         <button type="button" className="btn btn-info text-light m-2 add-admin px-5 btn-sm " onClick={()=>{setactive(1);setproject(init)}}>إضــافة  <i className="fas text-light mx-2 fa-plus"></i> </button>
-        <div className="form-group rtl add-admin mt-0 w-25">
-        <label htmlFor="exampleFormControlSelect1"></label>
-       <select className="form-control" id="exampleFormControlSelect1">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
+        <div className="form-group rtl add-admin mt-2 w-25">
+       <select className="form-control fs9" id="exampleFormControlSelect1" onChange={onkinde}>
+       <option selected disabled> اختار نوع المشروع</option>
+      <option value="single">مشروع موقع واحد</option>
+      <option  value="multi">إتفاقية إطارية </option>
+
     </select>
   </div>
   <div className="row bs m-0  w-100">
@@ -662,6 +710,14 @@ return (
          <p className=" bg6 text-start  col-12">  {project.scope}</p>
        </div>
        </div> 
+       {
+        project.kinde?
+        <div className="   p-1 mt-1  mx-0 bs row">
+        <p className=" bg6 text-start  col-8">  { project.kinde=="single"?"مشروع موقع واحد":"إتفاقية إطارية"}</p>
+        <p className="  text-start  col-3"> نوع المشروع</p>
+        <i className="fas fa-map text-start col-1 p-1"></i>
+        </div>:""
+       }
        <div className="   p-1 mt-1  mx-0 bs row">
          <p className=" bg6 text-start  col-8">  {project.case}</p>
          <p className="  text-start  col-3">حالة المشروع</p>

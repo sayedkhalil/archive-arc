@@ -70,7 +70,7 @@ setprojectitem(x)
   }
 
 
-const date = new Date();
+const date = new Date().toDateString();
 const addimgs =(x)=>{
   imgs.push(x)
   setimgs(imgs)

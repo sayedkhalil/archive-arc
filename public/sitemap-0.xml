@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>undefined</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-04T23:29:30.625Z</lastmod></url>
-<url><loc>undefined/admin</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-04T23:29:30.625Z</lastmod></url>
-<url><loc>undefined/login</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-04T23:29:30.626Z</lastmod></url>
+<url><loc>undefined</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-09T10:37:54.677Z</lastmod></url>
+<url><loc>undefined/admin</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-09T10:37:54.678Z</lastmod></url>
+<url><loc>undefined/login</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2024-08-09T10:37:54.678Z</lastmod></url>
 </urlset>

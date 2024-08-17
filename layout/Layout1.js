@@ -5,7 +5,7 @@ import { useAppContext } from "../AppContext";
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import { db, storage } from "../firebase";
-import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc , setDoc,getDoc} from "firebase/firestore";
+import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc, query, where ,onSnapshot ,setDoc,getDoc} from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
 import { useRouter } from 'next/router'
@@ -13,8 +13,10 @@ import { useRouter } from 'next/router'
 const Layout1 = ({children}) => {
   const[name,setname]=useState("")
   const[proj,setproj]=useState("")
+  const[req,setreq]=useState("")
   const de=[]
   var init ={}
+  const d = "0"
   const [appState, setAppState] = useAppContext();
   const[cart,setcart]=useState([])
  useEffect(async()=>{
@@ -27,8 +29,12 @@ const Layout1 = ({children}) => {
   setcategory(de)
   setcategory1(de)
   setcategory2(de)
+  const reqlist = collection(db, 'requisite');
+  const reqsnapshot = await getDocs(reqlist);
+  const requisite = await reqsnapshot.docs?reqsnapshot.docs.map(doc => (doc.data())):[]
   return catolist,getinfo
- },[])
+
+ },[d])
  const [category1,setcategory1]=useState([]);
 const [category2,setcategory2]=useState([]);
 const [category,setcategory]=useState([]);
@@ -50,14 +56,29 @@ const router = useRouter()
   localStorage.removeItem("id");
   window.location.reload();
  }
+
+
+
  useEffect(async() => {
   const id = localStorage.getItem("id") 
   var docRef = doc(db, "user", id);
   const infoSnap = await getDoc(docRef)
+  // const reqlist = collection(db, 'requisite');
+  // const reqsnapshot = await getDocs(reqlist);
+  // const requisite = await reqsnapshot.docs?reqsnapshot.docs.map(doc => (doc.data())):[]
+  const q = query(collection(db, "requisite"), where("mention", "==", infoSnap.data().id));
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const requesite = [];
+    querySnapshot.forEach((doc) => {
+        requesite.push(doc.data());
+    });
+    setreq(requesite)
+  });
+
   setname(infoSnap.data().name)
   setproj(infoSnap.data().proj)
 
-  });
+  },);
   
   return (  
 < div >
@@ -87,11 +108,15 @@ crossOrigin="anonymous"></script>
 
 </li>
 <li className="nav-item w-25 ">
- <div className="row w-100">
+ <div className="row w-100 div-nof">
 <p className=" col-5 pt-2 text-primary">{proj}</p>
 <p className="pt-2 px-2 col-5 text-end">{name}</p>
 <i className="fas fa-user fa-lg pt-3 px-2 text-warning col-1"></i>
 <i className="far fa-bell fa-lg pt-3 col-1 text end"></i>
+{req.length>0? 
+  <p className="rounded-circle bg-danger text-light fs9 nif p-1 text-center">{req.length}</p>
+
+:""}
  </div>
 
 </li>

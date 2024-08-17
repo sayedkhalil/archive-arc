@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { db, storage } from "../firebase";
-import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc , setDoc,getDoc, query, where} from "firebase/firestore";
+import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc, query, where ,onSnapshot ,setDoc,getDoc} from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import AuthRoute from '../authrout'
 import Layout1 from '../layout/Layout1'
@@ -17,24 +17,22 @@ export default function Home({getdata }) {
   const id = localStorage.getItem("id") 
   const[active,setactive]=useState("active0")
   const[div,setdiv]=useState()
-  const[CurrentUser,setCurrentUser]=useState(getdata.users.find(x=>x.id==id))
+  const[reqlist,setreqlist]=useState([])
+
+    const[CurrentUser,setCurrentUser]=useState(getdata.users.find(x=>x.id==id))
   const[project,setproject]=useState()
-  const[tasks,settasks]=useState(getdata.requisite.filter(x=>x.mention==id))
-  const[NewTasks,setNewTasks]=useState(getdata.requisite.filter(x=>x.tag==id))
-
-
-  
-
-
-
-  const[etit_request,setetit_request]=useState( {id:"archplan214",title:"بدأ أعمال ",path:"arch/dfd/jhgf/012",name:"مشروع ترميم قصر إبراهيم",date:"122/05/2024",action:"0",version:"v001",notes:[{date:"02/05/2024",name:"محمد حامد",note:"مراجعة المخططات المخططات المخططات المخططات المخططات المخططاتالمخططات المخططات المخططات"},{date:"02/05/2024",name:"المقاول",note:"مراجعة المخططات"},{date:"02/05/2024",name:"عادل عثمان",note:"مراجعة المخططات"}]},
-  )
+  const[tasks,settasks]=useState([])
+   const[newTasks,setnewTasks]=useState([])
+  const[etit_request,setetit_request]=useState({} )
 
   const onnew=()=> {
     setactive("active1")
     setdiv(0)
   }
+  var d = 0
   useEffect(()=>{
+    
+
     if(CurrentUser.ref =="constarctor"){
     setproject(getdata.projects.find(x=>x.contuser==id))
     }
@@ -42,12 +40,33 @@ export default function Home({getdata }) {
       setproject(getdata.projects.find(x=>x.teamuser==id))
       }
      if (CurrentUser.ref=="teamuser"&& CurrentUser.access){
-      settasks(getdata.requisite)
      }
+     const q = query(collection(db, "requisite"), where("mention", "==", id));
+     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+       const requesite = [];
+       querySnapshot.forEach((doc) => {
+           requesite.push(doc.data());
+       });
+       settasks(requesite)
+     });
       
-  },[])
+     const unsub = onSnapshot(collection(db, "requisite"), (snapshot) => {
+      const req =[]
+      snapshot.docs.forEach(doc => {
+        req.push(doc.data())
+      });
+      setreqlist(req)
+     
+      setnewTasks(req.filter(x=>x.tags.find(x=>x==id)))
 
-  console.log(NewTasks)
+    });
+    if (CurrentUser.jop=="موؤرشف"){
+     
+      settasks([...tasks, filter(x=>!x.archivet&&x.aprove=='aprove-a'||x.aprove =='aprove-b'||x.aprove=='aprove-d')])
+
+    }
+
+  },[])
 
 
 
@@ -69,14 +88,27 @@ export default function Home({getdata }) {
       <div className='rtl p-3'>
       <button type="button" className="btn btn-info text-dark m-2 font-weight-bold px-3 btn-sm" onClick={onnew}>طلب جديد <i className="fas text-light mx-2 fa-plus"></i> </button>
       </div>
-      <Cards data={tasks}/>
+      { tasks.length>0?
+      
+      <div className='row  cards m-auto'>
+      <p className='   text-center bg-danger my-2 w-100 text-light p-1'>    يرجى اتخاذ قرار
+      </p>
+        {
+       tasks.map(x=>
+            <div className='col-2 p-1'> <Task data={x} setactive={setactive} setdiv={setdiv} setetit_request={setetit_request}  />
+        </div> 
+         )
+        }
+         
+      </div>:""}
+      <Cards data={newTasks}/>
       <div className={`nav-slide ${active} `}>
-      {div==0?<NewForm setactive={setactive} user={CurrentUser} users={getdata.users} project={project} requisites={getdata.requisites} arshive={getdata.arshive}/>:<EditForm data={etit_request} setactive={setactive}/>}
+      {div==0?<NewForm setactive={setactive} user={CurrentUser} users={getdata.users} project={project} requisites={getdata.requisites} arshive={getdata.arshive} setnewTasks={setnewTasks} newTasks={newTasks}/>:<EditForm data={etit_request} requisites={getdata.requisites} projects={getdata.projects} setactive={setactive} contractors={getdata.contractors} project={project} user={CurrentUser} users={getdata.users}/>}
 
       </div>
       <div className='row cards m-auto'>
         {
-          tasks.map(x=>
+      newTasks.map(x=>
             <div className='col-2 p-1'> <Task data={x} setactive={setactive} setdiv={setdiv} setetit_request={setetit_request}  />
         </div> 
          )
@@ -94,7 +126,7 @@ export default function Home({getdata }) {
     const infoRef = doc(db, "info", "info");
     const infoSnap = await getDoc(infoRef)
     const getinfo =  infoSnap.data()?infoSnap.data().info:{}
-    const reqlist = collection(db, 'rquisite');
+    const reqlist = collection(db, 'requisite');
     const reqsnapshot = await getDocs(reqlist);
     const requisite = await reqsnapshot.docs?reqsnapshot.docs.map(doc => (doc.data())):[]
     const projlist = collection(db, 'projects');
@@ -109,9 +141,12 @@ export default function Home({getdata }) {
     const arshivelist = collection(db, 'arshive');
     const arshivesnapshot = await getDocs(arshivelist);
     const arshive =   await arshivesnapshot.docs?arshivesnapshot.docs.map(doc =>(doc.data())):[] 
+    const contlist = collection(db, 'contractors');
+    const contsnapshot = await getDocs(contlist);
+    const contractors = await contsnapshot.docs?contsnapshot.docs.map(doc => (doc.data())):[]
       
     return{
-        props:{getdata:{requisite:requisite ,projects:projects,users:users,requisites:requisites,arshive:arshive,getinfo:getinfo}}
+        props:{getdata:{requisite:JSON.stringify(requisite ),projects:projects,users:users,requisites:requisites,arshive:arshive,contractors:contractors,projects:projects,getinfo:getinfo}}
            }
   }
   

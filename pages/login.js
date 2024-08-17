@@ -25,7 +25,7 @@ const Login = () => {
     const infoSnap = await getDoc(docRef)
     if(infoSnap.data().email==mail){
       localStorage.setItem("id",infoSnap.data().id)
-      window.location = 'http://localhost:3000/'
+      window.location = 'https://archive-arc.vercel.app/'
     }
      else{
         alert("تأكد من صحة البريد والرقم السري")

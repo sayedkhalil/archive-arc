@@ -263,3 +263,32 @@ height: 100vh;
 .fs-form{
   font-size: small;
 }
+.nif{
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 0px;
+  right: 5px;
+
+}
+.div-nof{
+  position: relative;
+}
+/* -----------------------------------------------------archive------------------------------------------------- */
+.archive-c{
+  width:  95%;
+  margin: auto;
+  padding: 0%;
+  box-sizing: border-box;
+}
+.archive-d{
+  height: 70px;
+  
+}
+.filt{
+  height: 70px;
+}
+.filedev{
+  overflow-y: scroll;
+ height: 200px;
+}
