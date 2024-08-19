@@ -12,7 +12,7 @@ import NewForm from '../layout/newform';
 import EditForm from '../layout/editform';
 import { useEffect, useState } from 'react';
 import Cards from '../layout/cards';
-
+export const dynamic = 'force-dynamic';
 export default function Home({getdata }) {
   const id = localStorage.getItem("id") 
   const[active,setactive]=useState("active0")

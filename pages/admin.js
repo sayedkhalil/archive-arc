@@ -16,6 +16,7 @@ import Requisite from "../layout/requisite";
 import Tecproject from "../layout/tecproject";
 import Help from "../layout/help";
 import Tasks from "../layout/tasks";
+export const dynamic = 'force-dynamic';
 export const getStaticProps =async()=>{
   const contlist = collection(db, 'contractors');
   const contsnapshot = await getDocs(contlist);

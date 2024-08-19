@@ -8,7 +8,7 @@ import { collection, addDoc ,getDocs,doc,Timestamp,deleteDoc , setDoc,getDoc} fr
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Layout1 from "../layout/Layout1";
 import Task from "../layout/task";
-
+export const dynamic = 'force-dynamic';
 export const getStaticProps =async()=>{
   const archivetlist = collection(db, 'archivet');
   const archivetsnapshot = await getDocs(archivetlist);
