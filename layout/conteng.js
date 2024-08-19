@@ -12,7 +12,7 @@ import Layout1 from "../layout/Layout1";
 const Conteng = (props) => {  
   const [contractorusers,setcontractorusers]=useState(props.data.filter(x=>x.ref=="constarctor"))
   const [contractors,setcontractors]=useState(props.contracors)
-  const [contractoruser,setcontractoruser]=useState(contractorusers[0])
+  const [contractoruser,setcontractoruser]=useState(contractorusers[0]?contractorusers[0]:{})
   const [project,setproject]=useState(props.projects.filter(x=>x.contactor==contractoruser.id))
   const[contractoruseritem,setcontractoruseritem]=useState({})
   const[progress,setprogress]=useState(0)
@@ -215,7 +215,7 @@ return (
          <i className="fas fa-key text-start col-1 p-1"></i>
        </div>
        <div className="   p-1 mt-1  mx-0 bs row">
-         <p className=" bg6 text-start  col-11">{active==0?contractors.find(x=>x.id==contractoruser.contractor).name:""}</p>
+         <p className=" bg6 text-start  col-11">{active==0&&contractoruser.contractor?contractors.find(x=>x.id==contractoruser.contractor).name:""}</p>
          <i className="fas fa-warehouse text-start col-1 p-1"></i>
        </div>  
        <div className="   p-1 mt-1  mx-0 bs row">

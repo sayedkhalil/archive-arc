@@ -3,6 +3,8 @@ import Layout1 from '../layout/Layout1'
 import '../styles/globals.css'
 import { AppWrapper } from "../AppContext";
 import { AuthProvider } from '../AuthContext';
+export const dynamic = "force-dynamic"
+
 function MyApp({ Component, pageProps }) {
   return (
     <>

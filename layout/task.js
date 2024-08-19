@@ -83,7 +83,7 @@ crossOrigin="anonymous">
 <div className={`col-12 p-2 text-info text-start task-body p-1  `}>
     <div className=" w-100 row task-body1 p-1 rounded">
     {   
-    data.notes.map(x=>
+     data.notes?data.notes.map(x=>
         <div className=" w-100 row note-task mx-0 mt-1  ">
         <i className="fas  fa-user fa-lg  px-2  col-1"></i>
         <p className=" px-3 col-11 text-dark ">{x.name}</p>
@@ -94,7 +94,7 @@ crossOrigin="anonymous">
         {JSON.stringify(x.date)}
         </p>
         </div>
-                    )
+                    ):""
        }
     </div>
 </div>

@@ -39,8 +39,8 @@ const[user,setuser]=useState(props.users.find(x=>x.id == props.user.id))
         const docRef = await setDoc(doc(db, "requisite", props.data.code),{...props.data,archivet:"1"});
         const Ref = await setDoc(doc(db, `archive\/${props.data.projectId}\/${props.data.path}`, props.data.code),{title:props.data.title,file:props.data.file,id: props.data.code,date:new Date().toDateString()});
         props.setactive("active0")
-      }else{
-        const docRef = await setDoc(doc(db, "requisite", props.data.code),{...props.data,archivec:"1"});
+      }else if (props.user.ref =="constarctor"){
+        const docRef = await setDoc(doc(db, "requisite", props.data.code),{...props.data,archivec:"1",mention:""});
         props.setactive("active0")
       }
     }
@@ -438,6 +438,7 @@ crossOrigin="anonymous">
      props.user.ref =="constarctor"||props.user.jop=="موؤرشف"?
      <button type="button" className="btn btn-info m-4 px-3 text-light rtl  btn-sm"onClick={onarch}
      > أرشفــــة</button>:""
+     
     }
   
     </div>
