@@ -1,6 +1,7 @@
 
 import nodemailer from 'nodemailer'
-
+export const runtime = 'edge';
+export const preferredRegion = 'iad1'; 
  const handler =async(req, res) =>{
          const e =   req.body
         const email = process.env.EMAIL;
